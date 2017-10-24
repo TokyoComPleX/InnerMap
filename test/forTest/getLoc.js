@@ -1,0 +1,53 @@
+//测试用例
+var beacons1 = {
+   "beacons":[
+           	{
+           	"major":10008,
+           	"minor":13027,
+           	"uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825",
+           	"accuracy":"0.5",
+           	"rssi":"-66",
+           	"proximity":"1",
+           	"heading":"288.1355"
+           	},
+           	{
+           	"major":10008,
+           	"minor":13028,
+           	"uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825",
+           	"accuracy":"5",
+           	"rssi":"-49",
+           	"proximity":"2",
+           	"heading":"288.1355"
+           	},
+           	{
+           	"major":10008,
+           	"minor":13029,
+           	"uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825",
+           	"accuracy":"5",
+           	"rssi":"-49",
+           	"proximity":"2",
+           	"heading":"288.1355"
+           	},
+           	{
+           	"major":10008,
+           	"minor":13030,
+           	"uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825",
+           	"accuracy":"1.8",
+           	"rssi":"-49",
+           	"proximity":"2",
+           	"heading":"288.1355"
+           	},
+           	{
+           	"major":10008,
+           	"minor":13031,
+           	"uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825",
+           	"accuracy":"3.7",
+           	"rssi":"-49",
+           	"proximity":"2",
+           	"heading":"288.1355"
+           	}
+           	]
+};
+var a = getLoc(beacons1.beacons);
+console.log(a);
+console.log(1);
