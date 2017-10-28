@@ -1,9 +1,19 @@
 /***********************全局变量层*************************/
 // function Dictionary() {
 //     this.data = new Array();
+//     this.keys = new Array();
 //
 //     this.put = function (key, value) {
-//         this.data[key] = value;
+//         if(jQuery) {
+//             if(value instanceof Array){
+//                 this.data[key] = new Array();
+//                 $.extend(true , this.data[key] , value);
+//             }
+//         }else if(!value.length){
+//             this.data[key] = value;
+//         }else
+//             console.log("NO jQuery,put operation fail.");
+//         this.keys.push(key);
 //     };
 //
 //     this.getvalue = function (key) {
@@ -11,11 +21,7 @@
 //     };
 //
 //     this.getkey = function (i) {
-//         var keys = [];
-//         for (var key in this.data) {
-//             keys.push(key);
-//         }
-//         return keys[i];
+//         return this.keys[i];
 //     };
 //
 //     this.getfloor = function () {
@@ -30,6 +36,8 @@
 //
 //     this.remove = function (key) {
 //         this.data[key] = null;
+//         var index = this.keys.indexOf(key);
+//         this.keys.splice(index,index+1);
 //     };
 //
 //     this.isEmpty = function () {
@@ -37,10 +45,7 @@
 //     };
 //
 //     this.length = function () {
-//         var i = 0;
-//         for (a in this.data)
-//             i++;
-//         return i;
+//         return this.keys.length;
 //     };
 // }
 // var b = {

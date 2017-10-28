@@ -22,7 +22,7 @@ function dijkstra(sourceV, adjMatrix) {
 		path = [],
 
 		dist = [];
-	distCopy = [],
+	var distCopy = [],
 		vertexNum = adjMatrix.length;
 
 	var temp, u,

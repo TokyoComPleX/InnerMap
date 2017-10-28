@@ -1,4 +1,3 @@
-/*发送GET请求后，将收到消息为b*/
 function Dictionary() {
     this.data = new Array();
     this.keys = new Array();
@@ -48,3 +47,12 @@ function Dictionary() {
         return this.keys.length;
     };
 }
+
+var a = [11,22];
+var b = new Dictionary();
+b.put('1F',22);
+b.put('2F',33);
+b.put('3F',44);
+b.remove('1F');
+a.splice(1,1);
+console.log(b.length().b.keys.join('\n'));

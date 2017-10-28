@@ -1,13 +1,13 @@
 //键值对数组构造函数
 function Dictionary() {
-
     this.data = new Array();
 
     this.put = function (key, value) {
         if(jQuery) {
-            if(value.length)
+            if(value instanceof Array){
                 this.data[key] = new Array();
-            $.extend(true , this.data[key] , value);
+                $.extend(true , this.data[key] , value);
+            }
         }else if(!value.length){
             this.data[key] = value;
         }else
@@ -51,7 +51,6 @@ function Dictionary() {
         return i;
     };
 }
-
 /**************************************************/
 var floorPath = new Dictionary();
 floorPath.put('1F', [1, 2, 3, 4, 5, 6, 7]);

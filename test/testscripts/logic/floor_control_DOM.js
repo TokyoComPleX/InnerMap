@@ -1,47 +1,52 @@
-/***********************全局变量层*************************/
+
 // function Dictionary() {
-//     this.data = new Array();
+// this.data = new Array();
+// this.keys = new Array();
 //
-//     this.put = function (key, value) {
+// this.put = function (key, value) {
+//     if(jQuery) {
+//         if(value instanceof Array){
+//             this.data[key] = new Array();
+//             $.extend(true , this.data[key] , value);
+//         }
+//     }else if(!value.length){
 //         this.data[key] = value;
-//     };
+//     }else
+//         console.log("NO jQuery,put operation fail.");
+//     this.keys.push(key);
+// };
 //
-//     this.getvalue = function (key) {
-//         return this.data[key];
-//     };
+// this.getvalue = function (key) {
+//     return this.data[key];
+// };
 //
-//     this.getkey = function (i) {
-//         var keys = [];
-//         for (var key in this.data) {
-//             keys.push(key);
+// this.getkey = function (i) {
+//     return this.keys[i];
+// };
+//
+// this.getfloor = function () {
+//     if(this.data.floor){
+//         var floors = [];
+//         for(var F in this.data.floor){
+//             floors.push(F);
 //         }
-//         return keys[i];
-//     };
+//     }
+//     return floors;
+// };
 //
-//     this.getfloor = function () {
-//         if(this.data.floor){
-//             var floors = [];
-//             for(var F in this.data.floor){
-//                 floors.push(F);
-//             }
-//         }
-//         return floors;
-//     };
+// this.remove = function (key) {
+//     this.data[key] = null;
+//     var index = this.keys.indexOf(key);
+//     this.keys.splice(index,index+1);
+// };
 //
-//     this.remove = function (key) {
-//         this.data[key] = null;
-//     };
+// this.isEmpty = function () {
+//     return this.data.length == 0;
+// };
 //
-//     this.isEmpty = function () {
-//         return this.data.length == 0;
-//     };
-//
-//     this.length = function () {
-//         var i = 0;
-//         for (a in this.data)
-//             i++;
-//         return i;
-//     };
+// this.length = function () {
+//     return this.keys.length;
+// };
 // }
 // var b = {
 //     POST: "abc",
