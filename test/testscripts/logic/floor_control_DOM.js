@@ -1,52 +1,58 @@
 
 // function Dictionary() {
-// this.data = new Array();
-// this.keys = new Array();
+//     this.data = new Array();
+//     this.keys = new Array();
 //
-// this.put = function (key, value) {
-//     if(jQuery) {
-//         if(value instanceof Array){
-//             this.data[key] = new Array();
-//             $.extend(true , this.data[key] , value);
+//     this.put = function (key, value) {
+//         if(jQuery) {
+//             if(value instanceof Array){
+//                 this.data[key] = new Array();
+//                 $.extend(true , this.data[key] , value);
+//             }else {
+//                 this.data[key] = value;
+//             }
+//         }else if(!value.length){
+//             this.data[key] = value;
+//         }else
+//             console.log("NO jQuery,put operation fail.");
+//         this.keys.push(key);
+//     };
+//
+//     this.getvalue = function (key) {
+//         if (this.keys.indexOf(key) != -1){//如果存在这个键值
+//             return this.data[key];
+//         }else{
+//             return null;
 //         }
-//     }else if(!value.length){
-//         this.data[key] = value;
-//     }else
-//         console.log("NO jQuery,put operation fail.");
-//     this.keys.push(key);
-// };
+//     };
 //
-// this.getvalue = function (key) {
-//     return this.data[key];
-// };
+//     this.getkey = function (i) {
+//         return this.keys[i];
+//     };
 //
-// this.getkey = function (i) {
-//     return this.keys[i];
-// };
-//
-// this.getfloor = function () {
-//     if(this.data.floor){
-//         var floors = [];
-//         for(var F in this.data.floor){
-//             floors.push(F);
+//     this.getfloor = function () {
+//         if(this.data.floor){
+//             var floors = [];
+//             for(var F in this.data.floor){
+//                 floors.push(F);
+//             }
 //         }
-//     }
-//     return floors;
-// };
+//         return floors;
+//     };
 //
-// this.remove = function (key) {
-//     this.data[key] = null;
-//     var index = this.keys.indexOf(key);
-//     this.keys.splice(index,index+1);
-// };
+//     this.remove = function (key) {
+//         this.data[key] = null;
+//         var index = this.keys.indexOf(key);
+//         this.keys.splice(index,index+1);
+//     };
 //
-// this.isEmpty = function () {
-//     return this.data.length == 0;
-// };
+//     this.isEmpty = function () {
+//         return this.data.length == 0;
+//     };
 //
-// this.length = function () {
-//     return this.keys.length;
-// };
+//     this.length = function () {
+//         return this.keys.length;
+//     };
 // }
 // var b = {
 //     POST: "abc",

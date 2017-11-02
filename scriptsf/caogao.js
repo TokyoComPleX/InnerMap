@@ -1,29 +1,33 @@
 //键值对数组构造函数
 function Dictionary() {
     this.data = new Array();
+    this.keys = new Array();
 
     this.put = function (key, value) {
         if(jQuery) {
             if(value instanceof Array){
                 this.data[key] = new Array();
                 $.extend(true , this.data[key] , value);
+            }else {
+                this.data[key] = value;
             }
         }else if(!value.length){
             this.data[key] = value;
         }else
-            console.log("NO jQuery,put operation fail.")
+            console.log("NO jQuery,put operation fail.");
+        this.keys.push(key);
     };
 
     this.getvalue = function (key) {
-        return this.data[key];
+        if (this.keys.indexOf(key) != -1){//如果存在这个键值
+            return this.data[key];
+        }else{
+            return null;
+        }
     };
 
     this.getkey = function (i) {
-        var keys = [];
-        for (var key in this.data) {
-            keys.push(key);
-        }
-        return keys[i];
+        return this.keys[i];
     };
 
     this.getfloor = function () {
@@ -38,6 +42,8 @@ function Dictionary() {
 
     this.remove = function (key) {
         this.data[key] = null;
+        var index = this.keys.indexOf(key);
+        this.keys.splice(index,index+1);
     };
 
     this.isEmpty = function () {
@@ -45,10 +51,7 @@ function Dictionary() {
     };
 
     this.length = function () {
-        var i = 0;
-        for (a in this.data)
-            i++;
-        return i;
+        return this.keys.length;
     };
 }
 /**************************************************/

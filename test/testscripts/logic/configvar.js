@@ -9,7 +9,9 @@ var b = {
             parkingplace: "data/1-parkingplace.geojson",
             road: "data/1-road.geojson",
             stairs: "data/1-stairs.geojson",
-            wall : "data/1-wall.geojson"
+            wall : "data/1-wall.geojson",
+            matrix : "data/1-matrix.json",
+            beacons : "data/ibeacons.json"
         },
         '2F': {
             circle: "data/2-circle.geojson",
@@ -17,12 +19,14 @@ var b = {
             parkingplace: "data/2-parkingplace.geojson",
             road: "data/2-road.geojson",
             stairs: "data/2-stairs.geojson",
-            wall : "data/2-wall.geojson"
+            wall : "data/2-wall.geojson",
+            matrix : "data/2-matrix.json",
+            beacons : "data/ibeacons.json"
         }
-    },
+    }/*,
     json: {
         'ibeacons': "data/ibeacons.json"
-    }
+    }*/
 };
 var mapRenderInfo  = new Dictionary();
 $.extend(true,mapRenderInfo.data,b);
@@ -36,7 +40,7 @@ spare = {
     '2F':[200]
 };
 sparePP={};//替换掉sparePP1&sparePP2
-var layers = {};//全局变量
+var layers = {};//图层变量存放处
 var vectorsources = {};//图层的source
 //定义投影坐标系，仅在地图渲染部分被引用
 var projection = new ol.proj.Projection({
@@ -72,6 +76,16 @@ var overlay = new ol.Overlay(({
     }
 }));
 
+
+//获取当前页面的网址和所带信息
+var currentUrl = window.location.href;
+var params = currentUrl.split("?")[1];
+//判断页面是否是摇一摇得到的
+if(params) {
+    var ticketStr = params.split("&")[0];
+    var isTicket = ticketStr.split("=")[0];
+    var ticket = ticketStr.split("=")[1];
+}
 /*
 
 /!*

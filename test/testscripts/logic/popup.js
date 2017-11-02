@@ -9,8 +9,6 @@ if(localStorage.parkingplace !== undefined) {
     document.getElementById("finalVertex").value = localStorage.parkingplace;
 }
 
-
-
 /*关闭弹出框按钮*/
 closer.onclick = function() {
     overlay.setPosition(undefined);
@@ -20,7 +18,7 @@ closer.onclick = function() {
 
 
 /*
- * @des		弹出框函数
+ * @func	弹出框函数
  * @param	pixel	点击的像素点
  * @return	点击车位时弹出框框并位移到屏幕中心
  */
@@ -75,5 +73,5 @@ map.on('click', function(evt) {
     var pixel = map.getEventPixel(evt.originalEvent);
     // alert(pixel.toString());
     displayFeatureInfo(pixel);
-    //*****查不到这个函数
+
 });

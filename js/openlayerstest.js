@@ -416,6 +416,7 @@ var lineLayer;
  */
 function findPath(pointList) {
 	//0.清理原先图层
+     // b = map.getArray();
 	if(lineLayer) {
 		map.removeLayer(lineLayer);
 	}
@@ -535,7 +536,7 @@ function myWay(certainPos) {
 				var endPos = pathPos[pathPos.length - 1];
 				endMarkerOverlay.setPosition(endPos);
 				map.addOverlay(endMarkerOverlay);
-				findPath(pathPos)
+                findPath(pathPos);
 					//先判断是否为摇一摇状态，如果是才有停止导航的按钮
 				if(params) {
 					if(isTicket == "ticket" && ticket) {
@@ -588,6 +589,7 @@ $("body").delegate("#search", "click", function(event) {
 				}));
 				myWay([]);
 			} else {
+
 				//清除图层
 				if(lineLayer && startMarkerOverlay && endMarkerOverlay) {
 					map.removeLayer(lineLayer);
@@ -601,7 +603,9 @@ $("body").delegate("#search", "click", function(event) {
 		}
 	} else {
 		//直接进行路径规划
-		myWay([]);
+        var a = map.getLayerGroup();
+
+        myWay([]);
 	}
 
 });

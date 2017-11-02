@@ -8,6 +8,8 @@
 //             if(value instanceof Array){
 //                 this.data[key] = new Array();
 //                 $.extend(true , this.data[key] , value);
+//             }else {
+//                 this.data[key] = value;
 //             }
 //         }else if(!value.length){
 //             this.data[key] = value;
@@ -17,7 +19,11 @@
 //     };
 //
 //     this.getvalue = function (key) {
-//         return this.data[key];
+//         if (this.keys.indexOf(key) != -1){//如果存在这个键值
+//             return this.data[key];
+//         }else{
+//             return null;
+//         }
 //     };
 //
 //     this.getkey = function (i) {

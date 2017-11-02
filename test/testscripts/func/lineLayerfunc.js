@@ -44,8 +44,11 @@
 var temp;
 function pathLayerInit(pathPosition){
     //先清空原来存储的图层
+    if (temp)
+        map.removeLayer(temp);
+
     if(lineLayers.length()){//清空上一次导航产生的路径数组
-        for(var i in lineLayers)
+        for(var i in lineLayers.data)
             lineLayers.remove(i);
     }
     for (var floor in pathPosition.data){
@@ -70,25 +73,33 @@ function pathLayerInit(pathPosition){
             source: source
         });
         lineLayers.put(floor,linelayer);
-        temp=linelayer;
+        if (!temp){
+            temp = linelayer;
+        }
+        return linelayer;
     }
 }
 //如何清掉已经有的路径图层?
 function drawPath(lineLayers) {
     //清理原图层
     // var a =map.getOverlays();
-    // if(map.getOverlays())
-    //     map.removeLayer(map.getOverlays());
-    // if(startMarkerOverlay)
-    //     map.removeOverlay(startMarkerOverlay);
-    // if(endMarkerOverlay)
-    //     map.removeOverlay(endMarkerOverlay);
+    if(temp)
+        map.removeLayer(temp);
+    if(map.getOverlayById("startMarker"))
+        map.removeOverlay(startMarkerOverlay);
+    if(map.getOverlayById("endMarker"))
+        map.removeOverlay(endMarkerOverlay);
+
     //获取跨层flag
     var croFlrFlag = lineLayers.length()>1;
     //获取楼层
     var currF = $('#float-left a.on').html();
+
+    temp = lineLayers.getvalue(currF);
+
+
     //判断是否需要画出路径
-    if(currF in lineLayers.data){//如果路径图层所属楼层有一个等于现在的楼层
+    if(lineLayers.getvalue(currF)){//如果路径图层所属楼层有一个等于现在的楼层
         if (!croFlrFlag){//如果不跨层，则三个都添加
             map.addOverlay(startMarkerOverlay);
             map.addOverlay(endMarkerOverlay);

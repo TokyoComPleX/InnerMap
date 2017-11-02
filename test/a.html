@@ -13,12 +13,16 @@ $signPackage = $jssdk->GetSignPackage();
     <!--自定义的地图样式-->
     <link rel="stylesheet" href="./css/mymap.css" />
     <!--openlayer3框架-->
-    <script type="text/javascript" src="libs/ol/ol.js"></script>
+    <script type="text/javascript" src="./libs/ol/ol.js"></script>
     <!--jquery框架-->
     <script type="application/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <!--bootstrap框架-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
     <!--渲染函数-->
     <!--最短路径算法-->
     <script type="text/javascript" src="js/dijkstrafindpath.js"></script>
@@ -34,6 +38,17 @@ $signPackage = $jssdk->GetSignPackage();
 <img id="start-marker" src="images/start.png"/>
 <!--终点标注-->
 <img id="end-marker" src="images/end.png"/>
+
+<!--地图容器-->
+<div id="map"></div>
+<!--弹出框-->
+<div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+    <button id="popup-btn-start" class="btn btn-default" >起点</button>
+    <button id="popup-btn-end" class="btn btn-primary" >终点</button>
+</div>
+
 <div id="start-modal">
     <!--下拉按钮-->
     <ul class="nav navbar-nav">
@@ -63,47 +78,39 @@ $signPackage = $jssdk->GetSignPackage();
     </ul>
 </div>
 <!-- 模态框（Modal） -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 90%;margin: 0 auto;padding-top: 1em;">
-            <div class="modal-content">
-                <div class="modal-header" style="padding-top:0.8em;padding-bottom: 0.8em;">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h5 class="modal-title" id="myModalLabel">
-                        路径规划
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    起点: <input type="text" id="sourceVertex" style="margin-bottom: 0.5em;padding-top: 0.25em;padding-bottom: 0.25em;padding-left: 0.25em;" value="请输入起始车位号" onfocus='this.value=""' /><br/> 终点: <input type="text" id="finalVertex" style="padding-top: 0.25em;padding-bottom: 0.25em;padding-left: 0.25em;" value="请输入终点车位号" onfocus='this.value=""' />
-                    <img id="exchange" src="images/exchange.png" style="width: 2em;height: 2em;margin-left: 1em;bottom: 2.5em; position: absolute;vertical-align: middle;" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        关闭
-                    </button>
-                    <button type="button" id="search" class="btn btn-primary">
-                        导航
-                    </button>
-                </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 90%;margin: 0 auto;padding-top: 1em;">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-top:0.8em;padding-bottom: 0.8em;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title" id="myModalLabel">
+                    路径规划
+                </h5>
+            </div>
+            <div class="modal-body">
+                起点: <input type="text" id="sourceVertex" style="margin-bottom: 0.5em;padding-top: 0.25em;padding-bottom: 0.25em;padding-left: 0.25em;" value="请输入起始车位号" onfocus='this.value=""' /><br/> 终点: <input type="text" id="finalVertex" style="padding-top: 0.25em;padding-bottom: 0.25em;padding-left: 0.25em;" value="请输入终点车位号" onfocus='this.value=""' />
+                <img id="exchange" src="images/exchange.png" style="width: 2em;height: 2em;margin-left: 1em;bottom: 2.5em; position: absolute;vertical-align: middle;" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" id="search" class="btn btn-primary">
+                    导航
+                </button>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
-<!--弹出框-->
-<div id="popup" class="ol-popup">
-    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content"></div>
-    <button id="popup-btn-start" class="btn btn-default" >起点</button>
-    <button id="popup-btn-end" class="btn btn-primary" >终点</button>
+    <!-- /.modal -->
 </div>
-
-<!--地图容器-->
-<div id="map"></div>
-
 <!--楼层控件-->
 <div id="float-left">
 
 </div>
+
 <!--openlayer3制作地图-->
 <!--功能实现部分-->
 <script src="testscripts/func/class.js"></script>
@@ -111,6 +118,7 @@ $signPackage = $jssdk->GetSignPackage();
 <script src="testscripts/func/floorCtrlDOM.js"></script>
 <script src="testscripts/func/mapRenderfunc.js"></script>
 <script src="testscripts/func/lineLayerfunc.js"></script>
+<script src="testscripts/func/routinePlanningfunc.js"></script>
 
 
 <!--逻辑连接部分-->
@@ -120,13 +128,14 @@ $signPackage = $jssdk->GetSignPackage();
 <script src="testscripts/logic/map_render.js"></script>
 <script src="testscripts/logic/floorSwitch.js"></script>
 <script src="testscripts/logic/popup.js"></script>
+<script src="testscripts/logic/route_planning.js"></script>
 <!--<script src="testscripts/configvar.js"></script>-->
 
-<script src="testscripts/draftCompeletVersion/RTP/mapdata.js"></script>
-<script src="testscripts/draftCompeletVersion/RTP/dijkstrafindpath.js"></script>
-<script src="testscripts/draftCompeletVersion/RTP/RTP_SE_Id2Rid.js"></script>
-<script src="testscripts/draftCompeletVersion/RTP/preperationRTP.js"></script>
 <!--测试区-->
+<!--<script src="testscripts/draftCompeletVersion/RTP/mapdata.js"></script>-->
+<!--<script src="testscripts/draftCompeletVersion/RTP/dijkstrafindpath.js"></script>-->
+<!--<script src="testscripts/draftCompeletVersion/RTP/RTP_SE_Id2Rid.js"></script>-->
+<!--<script src="testscripts/draftCompeletVersion/RTP/preperationRTP.js"></script>-->
 
 </body>
 

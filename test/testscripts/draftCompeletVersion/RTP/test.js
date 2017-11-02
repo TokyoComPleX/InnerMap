@@ -7,6 +7,8 @@ function Dictionary() {
             if(value instanceof Array){
                 this.data[key] = new Array();
                 $.extend(true , this.data[key] , value);
+            }else {
+                this.data[key] = value;
             }
         }else if(!value.length){
             this.data[key] = value;
@@ -16,7 +18,11 @@ function Dictionary() {
     };
 
     this.getvalue = function (key) {
-        return this.data[key];
+        if (this.keys.indexOf(key) != -1){//如果存在这个键值
+            return this.data[key];
+        }else{
+            return null;
+        }
     };
 
     this.getkey = function (i) {
@@ -48,11 +54,13 @@ function Dictionary() {
     };
 }
 
-var a = [11,22];
-var b = new Dictionary();
-b.put('1F',22);
-b.put('2F',33);
-b.put('3F',44);
-b.remove('1F');
-a.splice(1,1);
-console.log(b.length().b.keys.join('\n'));
+toaster.options = {
+    "positionClass": "toast-top-center",
+    "preventDuplicates": true,
+    "showDuration": "3000",
+    "hideDuration": "1000",
+    "timeOut": "1500",
+    "extendedTimeOut": "1000"
+
+};
+toaster["warning"]("请选择正确的起点与终点!");

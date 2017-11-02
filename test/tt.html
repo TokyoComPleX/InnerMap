@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="application/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <!--openlayer3框架-->
+    <script type="text/javascript" src="./libs/ol/ol.js"></script>
+</head>
+<body>
+<!--起始标注-->
+<img id="start-marker" src="images/start.png"/>
+
+
+<!--<script src="testscripts/draftCompeletVersion/RTP/routePlanningNoneAjax.js"></script>-->
+<script>
+    var startMarker = document.getElementById('start-marker');
+    var startMarkerOverlay = new ol.Overlay(({
+        element: startMarker,
+        autoPan: true,
+        autoPanAnimation: {
+            duration: 100
+        }
+    }));
+    alert(1);
+</script>
+</body>
+</html>
