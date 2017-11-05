@@ -28,9 +28,9 @@
 var mapInfo = getMapInfo('Backend_handler/final.php',{palce:"abc"});
 mapInfo = JSON.parse(mapInfo);
 // $("<pre/>").append(mapInfo).appendTo('body');
-function Dictionary() {
-    this.data = new Array();
+function Dictionary(depth) {
     this.keys = new Array();
+    this.data = new Array();
 
     this.put = function (key, value) {
         if(jQuery) {
@@ -82,8 +82,21 @@ function Dictionary() {
     this.length = function () {
         return this.keys.length;
     };
-}
-var mapRenderInfo = new Dictionary();
+
+    //将this.data新建成Dictionary类,原有数据保持不变
+    this.deepen = function (depth) {
+        var temp = this.data;
+        if (depth){
+            this.data = new Dictionary();
+            this.data.deepen(depth-1);
+        }
+        var that = this;
+        for (var key in temp){
+            that.put(key,temp[key]);
+        }
+        return depth;
+    }
+}var mapRenderInfo = new Dictionary();
 for(var i in mapInfo){
     mapRenderInfo.put(i,mapInfo[i]);
 }

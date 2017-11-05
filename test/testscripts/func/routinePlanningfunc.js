@@ -127,16 +127,19 @@ function adjmatrixConcat(d1, d2, e) {
  * @return {object} res res.v 距离sourceVertex车位最近的圆点Rid
  *                       res.d 距离finalVertex车位最近的圆点Rid
  */
-function parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor) {
+function parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor,flag) {
     if(sourceVertex == '您当前的位置'){
         sourceVertex = closestParkingPlace.get('Id');
         stFloor = closestParkingPlace.get('floor');
     }
+
     var sf_i = stFloor.split("F")[0];
     var ef_i = edFloor.split("F")[0];
+    var Rid_IdFlag = !!arguments[4];
+    var Rid_Id = new Dictionary();
     if(stFloor == edFloor){
         //获取车位的url
-        var url = "data/" + sf_i + "-parkingplace.geojson";
+        var url = "../data/" + sf_i + "-parkingplace.geojson";
         $.ajax({
             url: url,
             success: function(result) {
@@ -149,11 +152,18 @@ function parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor) {
                 //判断SE的id是否合法
                 if(result.features[sourceVertex] && result.features[finalVertex]) {
                     sourceVertex = result.features[sourceVertex].properties.Rid;
+                    // document.getElementById("finalVertex").value = finalVertex;
                     //记录终点坐标
                     localStorage.parkingplace = finalVertex;
-                    // document.getElementById("finalVertex").value = finalVertex;
                     //转换id和rid
                     finalVertex = result.features[finalVertex].properties.Rid;
+
+                    //TODO 检查是否有错
+                    if(Rid_IdFlag){
+                        result.features.forEach(function (value,index,arr) {
+                            Rid_Id.put(value.properties.Rid,value.properties.Id);
+                        })
+                    }
                 }else{
                     //如果不合法，弹出警示
                     $(function() {
@@ -171,8 +181,8 @@ function parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor) {
     }else{
         //如果在不同楼层
         //分别获取起点，终点楼层的车位图层url
-        sfurl = "data/" + sf_i + "-parkingplace.geojson";
-        edurl = "data/" + ef_i + "-parkingplace.geojson";
+        sfurl = "../data/" + sf_i + "-parkingplace.geojson";
+        edurl = "../data/" + ef_i + "-parkingplace.geojson";
         //分别请求对应楼层的图层，然后分别转换成Rid
         $.ajax({
             url: sfurl,
@@ -224,8 +234,12 @@ function parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor) {
         v:sourceVertex,
         d:finalVertex
     };
+    if (Rid_IdFlag)
+        res.Rid_Id = Rid_Id;
     return res;
 }
+
+
 
 /**
  * @func 获得最短路径
@@ -285,16 +299,6 @@ function searchPath(v, d, sf, ef) {
             //设置ajax为同步执行
             async: false
         });
-        /*switch (i){
-            case '1':
-                adjMatrix = matrix1;
-                floorArrConcat = ca1;//获得Rid数组
-                break;
-            case '2' :
-                adjMatrix = matrix2;
-                floorArrConcat = ca2;//获得Rid数组
-                break;
-        }*/
         //起点终点转成数组下标
         v = floorArrConcat.indexOf(v);
         d = floorArrConcat.indexOf(d);
@@ -361,26 +365,6 @@ function searchPath(v, d, sf, ef) {
             //设置ajax为同步执行
             async: false
         });
-        /*switch (sf_i){
-            case '1' :
-                adjMatrixSf = matrix1;
-                floorArrSf = ca1;
-                break;
-            case '2' :
-                adjMatrixSf = matrix2;
-                floorArrSf = ca2;
-                break;
-        }
-        switch (ef_i){
-            case '1' :
-                adjMatrixEf = matrix1;
-                floorArrEf = ca1;
-                break;
-            case '2' :
-                adjMatrixEf = matrix2;
-                floorArrEf = ca2;
-                break;
-        }*/
         //错误处理代码
         if(adjMatrixSf.length != floorArrSf.length ||
             adjMatrixEf.length != floorArrEf.length) {
@@ -549,11 +533,111 @@ function myWay(certainPos) {
     //获得起点终点文本框的内容
     var sourceVertex = document.getElementById("sourceVertex").value;
     var finalVertex = document.getElementById("finalVertex").value;
+
+
+
+    sourceVertex = parseInt(sourceVertex);
+    finalVertex = parseInt(finalVertex);
+//代码段,验证文本框内的车位Id是否存在于stFloor,edFloor所指向的楼层
+/*    var keys = parkingPlacesIds.keys;
+    var foundFlag = false;
+    if(parkingPlacesIds.getvalue(stFloor).indexOf(sourceVertex) == -1){//如果本层没找到
+        for (var i = 0 ; i < keys.length; i++){//遍历初始化过的所有楼层
+            var floor = keys[i];
+            if (floor == stFloor)
+                continue;
+            var currFloorIds = parkingPlacesIds.getvalue(floor);
+            if (currFloorIds.indexOf(sourceVertex) != -1){
+                stFloor = floor;
+                foundFlag = true;
+                break;
+            }
+        }
+        if (!foundFlag){
+           //如果初始化过的所有楼层中都没有
+           var allFloors = mapRenderInfo.getfloor();
+           keys.forEach(function (value,index,arr) {
+               var n = allFloors.indexOf(value);//获取该层在总楼层中的索引
+               allFloors = allFloors.slice(0,n).concat(allFloors.slice(n+1,allFloors.length));//删除该层
+           });
+           for (var j = 0 ; j < allFloors.length ; j++){
+                var floor = allFloors[j];
+                layer_init(floor);
+
+               var currFloorIds = parkingPlacesIds.getvalue(floor);
+               if (currFloorIds.indexOf(sourceVertex) != -1){
+                   stFloor = floor;
+                   foundFlag = true;
+                   break;
+               }
+           }
+            if (!foundFlag){//如果还是没找到
+                toaster.options = {
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": true,
+                    "showDuration": "3000",
+                    "hideDuration": "1000",
+                    "timeOut": "1500",
+                    "extendedTimeOut": "1000"
+                };
+                toaster["warning"]("请选择正确的起点与终点!");
+                return;
+            }
+        }
+    }
+    foundFlag = false;
+    keys = parkingPlacesIds.keys;//更新楼层索引
+    if(parkingPlacesIds.getvalue(edFloor).indexOf(finalVertex) == -1){//如果本层没找到
+        for (var i = 0 ; i < keys.length; i++){//遍历初始化过的所有楼层
+            var floor = keys[i];
+            if (floor == edFloor)
+                continue;
+            var currFloorIds = parkingPlacesIds.getvalue(floor);
+            if (currFloorIds.indexOf(finalVertex) != -1){
+                edFloor = floor;
+                foundFlag = true;
+                break;
+            }
+        }
+        if (!foundFlag){
+            //如果初始化过的所有楼层中都没有
+            var allFloors = mapRenderInfo.getfloor();
+            keys.forEach(function (value,index,arr) {
+                var n = allFloors.indexOf(value);//获取该层在总楼层中的索引
+                allFloors = allFloors.slice(0,n).concat(allFloors.slice(n+1,allFloors.length));//删除该层
+            });
+            for (var j = 0 ; j < allFloors.length ; j++){
+                var floor = allFloors[j];
+                layer_init(floor);
+
+                var currFloorIds = parkingPlacesIds.getvalue(floor);
+                if (currFloorIds.indexOf(finalVertex) != -1){
+                    edFloor = floor;
+                    foundFlag = true;
+                    break;
+                }
+            }
+            if (!foundFlag){//如果还是没找到
+                toaster.options = {
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": true,
+                    "showDuration": "3000",
+                    "hideDuration": "1000",
+                    "timeOut": "1500",
+                    "extendedTimeOut": "1000"
+                };
+                toaster["warning"]("请选择正确的起点与终点!");
+                return;
+            }
+        }
+    }*/
+//代码段结束,起始楼层,终点楼层校验完毕
+
     //将起点终点转化成Rid
-    var Id2Rid = parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor);
+    var Id2Rid = parkingPlaceId2circleRid(sourceVertex,finalVertex,stFloor,edFloor,true);
     //获取路径圆点的坐标数组
     var finalPathPos = searchPath(Id2Rid.v,Id2Rid.d , stFloor, edFloor);
-    if(certainPos.toString() != "") {
+    if(!!arguments.length) {
         finalPathPos.data[finalPathPos.keys[0]][0] = certainPos;
     }
 
@@ -576,6 +660,8 @@ function myWay(certainPos) {
 //根据当前楼层判断是否要画路径
 
         drawPath(lineLayers);
+    }else{
+    //    已经在函数内部对对应的错误进行了toaster提示
     }
 
 }

@@ -10,6 +10,8 @@
 var MAX = Infinity;
 
 /**
+ * @brief 求起点到所有点的最短路径
+ *
  * @param {number} sourceV 源点的索引，从0开始
  * @param {Array} adjMatrix 图的邻接矩阵，是一个二维数组
  */
@@ -47,8 +49,8 @@ function dijkstra(sourceV, adjMatrix) {
     }
 
     return {
-        path: path,
-        dist: dist
+        path: path,//路径
+        dist: dist //距离
     };
 }
 
@@ -200,5 +202,4 @@ function searchPath(v, d) {
 }
 
 //控制台打印路径
-/*
-console.log(searchPath(1,33));*/
+// console.log(searchPath(1,33));

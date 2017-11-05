@@ -603,8 +603,6 @@ $("body").delegate("#search", "click", function(event) {
 		}
 	} else {
 		//直接进行路径规划
-        var a = map.getLayerGroup();
-
         myWay([]);
 	}
 

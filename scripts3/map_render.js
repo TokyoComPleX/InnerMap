@@ -1,8 +1,8 @@
 
 /***********************全局变量层*************************/
-function Dictionary() {
-    this.data = new Array();
+function Dictionary(depth) {
     this.keys = new Array();
+    this.data = new Array();
 
     this.put = function (key, value) {
         if(jQuery) {
@@ -54,6 +54,20 @@ function Dictionary() {
     this.length = function () {
         return this.keys.length;
     };
+
+    //将this.data新建成Dictionary类,原有数据保持不变
+    this.deepen = function (depth) {
+        var temp = this.data;
+        if (depth){
+            this.data = new Dictionary();
+            this.data.deepen(depth-1);
+        }
+        var that = this;
+        for (var key in temp){
+            that.put(key,temp[key]);
+        }
+        return depth;
+    }
 }var b = {
     POST: "abc",
     map_name: "CenterMall",

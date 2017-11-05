@@ -1,8 +1,4 @@
 /********************全局变量*******************/
-var stFloor;//记录起点所在楼层
-var edFloor;//记录终点所在楼层
-
-
 
 //初始化路径规划对话框内容(若之前扫过将在此载入位置)
 if(localStorage.parkingplace !== undefined) {
@@ -51,12 +47,14 @@ function displayFeatureInfo (pixel) {
                 document.getElementById("sourceVertex").value = id;
                 //****将currf赋给stFloor全局变量
                 stFloor = currf;
+                stPos = center;
                 overlay.setPosition(undefined);
             });
             $("#popup-btn-end").click(function() {
                 //设为终点
                 document.getElementById("finalVertex").value = id;
                 edFloor = currf;
+                edPos = center;
                 overlay.setPosition(undefined);
             });
         }

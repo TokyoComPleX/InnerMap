@@ -1,3 +1,5 @@
+
+
 /*圆图层*/
 function maprender_circle(url_circle) {
     //第一层坐标圆图层
@@ -93,21 +95,39 @@ function maprender_spare(url_parking,spareplace,index)
             width: 1
         })
     });
+
+    //空闲车位的源,由于直接拷贝会影响原来的source,这里采用重新addFeature来构造
+    var spareVectorSource = new ol.source.Vector({
+        projection: projection,
+        format: new ol.format.GeoJSON({
+            extractStyles: false
+        })
+    });
+
     vectorSource.once('change', function(evt) {
         var source = evt.target;//获取所有车位
-        var spare = spareplace[index + 1 + 'F'];
-
-        sparePP[index + 1 + 'F'] = [];
+        var spare = spareplace[index];
+        //没有设定feature属性,所以只能在函数里获得Id,这个id在哪里设定的?难道不是在那个文件里吗?
+        //那个文件和source属性的关系
 
         if(source.getState() === 'ready') {
             // spareFeatures1 = source.getFeatures();//获取样式信息
             spareFeatures = source.getFeatures();//全局变量版
-            var first = spareFeatures[0].getProperties();
-            var id2key = first.Id;
-            for(var i = 0; i <spare.length; i++){
-                spareFeatures[spare[i]-id2key].setStyle(spareStyle);
-                sparePP[index + 1 + 'F'].push(spareFeatures[spare[i]-id2key]);//全局变量版
+
+            var Ids = [];//该层的所有车位id
+            // var first = spareFeatures[0].getProperties().Id;
+            for (var i = 0 ; i < spareFeatures.length ; i++){
+                var currId = spareFeatures[i].getProperties().Id;
+                Ids.push(currId);//spareFeatures的Id属性并非按序排列
             }
+            parkingPlacesIds.put(index,Ids);
+            for(var i = 0; i <spare.length; i++){
+                var id2key = Ids.indexOf(spare[i]);
+                spareFeatures[id2key].setStyle(spareStyle);
+                spareVectorSource.addFeature(spareFeatures[id2key]);
+            }
+            // console.log(spareVectorSource.getFeatures().length);
+            spareVectorSources.put(index,spareVectorSource);
         }
     });
     return vectorLayer_1_parking;
@@ -239,19 +259,19 @@ function mapcontainer_init(layers) {
     全局变量layers增加一条记录，例如：‘1F’：layergroup
 *
 * */
-function layer_init() {
+function layer_init(index) {
     // var index = $('#float-left a.on').index();
-    var index = $('#float-left a.on').html();
-    index = parseInt(index.substring(0,index.length-1));
-    index = index-1;
-    var parkingplace = spare[index + 1 + 'F'];
-    // console.log( spare[index + 1 + 'F']);
-    var renderInfo = mapRenderInfo.data.floor[index + 1 + 'F'];
+    if (!arguments.length){//如果没有输入,则默认初始化当前楼层的图层
+        var index = $('#float-left a.on').html();
+    }
+    var parkingplace = spare[index];
+    // console.log( spare[index]);
+    var renderInfo = mapRenderInfo.data.floor[index];
     var layergroup = [];
 
 //图层顺序wrcpes
     //如果该层图层没有初始化过
-    if(!layers[index + 1 + 'F']){
+    if(!layers[index]){
         vectorLayer_circle = maprender_circle(renderInfo['circle']);
         vectorLayer_elevator = maprender_elevator(renderInfo['elevator']);
         vectorLayer_parking = maprender_spare(renderInfo['parkingplace'],spare,index);
@@ -259,15 +279,20 @@ function layer_init() {
         vectorLayer_stairs = maprender_stairs(renderInfo['stairs']);
         vectorLayer_wall = maprender_wall(renderInfo['wall']);
         layergroup = [vectorLayer_wall,vectorLayer_road,vectorLayer_circle,vectorLayer_elevator,vectorLayer_parking,vectorLayer_stairs];
-        layers[index + 1 + 'F'] = layergroup;/*console.log(layers[index + 1 + 'F']);*/
-        vectorsources[index + 1 + 'F'] = [];
+        layers[index] = layergroup;/*console.log(layers[index]);*/
         var vectorCircleSource = vectorLayer_circle.getSource();
-        var vectorSource = vectorLayer_parking.getSource();
-        vectorsources[index + 1 + 'F'].push(vectorSource,vectorCircleSource);
+        var vectorParkingPlaceSource = vectorLayer_parking.getSource();
+        //装入全局变量
+        vectorCircleSources.put(index,vectorCircleSource);
+        vectorParkingPlaceSources.put(index,vectorParkingPlaceSource);
+        var vectorsources = {
+            vectorCircleSource :vectorCircleSource,
+            vectorParkingPlaceSource:vectorParkingPlaceSource
+        }
     }
 
     var result = {
-        'index' : index+1,
+        'index' : index,
         'layergroup':layergroup,
         'vectorsources':vectorsources
     };

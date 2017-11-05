@@ -43,9 +43,10 @@
  * */
 var temp;
 function pathLayerInit(pathPosition){
-    //先清空原来存储的图层
-    if (temp)
-        map.removeLayer(temp);
+    if(temp) {
+        //虽然不知道为什么,但加了这句话原来的路径就可以去掉,否则只靠drawPath里的那句话没法去掉
+        map.removeOverlay(temp);
+    }
 
     if(lineLayers.length()){//清空上一次导航产生的路径数组
         for(var i in lineLayers.data)
@@ -83,8 +84,8 @@ function pathLayerInit(pathPosition){
 function drawPath(lineLayers) {
     //清理原图层
     // var a =map.getOverlays();
-    if(temp)
-        map.removeLayer(temp);
+    // if(temp)
+    //     map.removeLayer(temp);
     if(map.getOverlayById("startMarker"))
         map.removeOverlay(startMarkerOverlay);
     if(map.getOverlayById("endMarker"))

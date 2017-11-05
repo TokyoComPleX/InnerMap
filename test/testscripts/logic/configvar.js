@@ -1,4 +1,4 @@
-
+//地图信息相关数据的所有url
 var b = {
     POST: "abc",
     map_name: "CenterMall",
@@ -34,21 +34,31 @@ $.extend(true,mapRenderInfo.data,b);
 /*
 map_render.js
 */
+//地图变量
+var map ;
 //空闲车位
-spare = {
+var spare = {
     '1F':[50],
     '2F':[200]
 };
-sparePP={};//替换掉sparePP1&sparePP2
-var layers = {};//图层变量存放处
-var vectorsources = {};//图层的source
+
+var stFloor;//记录起点所在楼层
+var edFloor;//记录终点所在楼层
+var stPos;//起点车位坐标
+var edPos;//终点车位坐标
+
+var spareVectorSources = new Dictionary();
+var parkingPlacesIds = new Dictionary();//存放每层车位Id,按照spareFeatures中的顺序,注意不是按Id从大到小的顺序
 //定义投影坐标系，仅在地图渲染部分被引用
+var layers = {};//每层图层初始化之后将存放在这里图层变量存放处
+
+var vectorParkingPlaceSources = new Dictionary();
+var vectorCircleSources = new Dictionary();//圆图层的source
 var projection = new ol.proj.Projection({
     code: 'EPSG:4326',
     extent: [0, 0, 3000, 3000]
 });
-var t = 0;
-var map ;
+
 
 
 /*
@@ -86,6 +96,16 @@ if(params) {
     var isTicket = ticketStr.split("=")[0];
     var ticket = ticketStr.split("=")[1];
 }
+
+
+
+/*
+* routinePlanning
+* */
+//记录离定位位置最近的车位
+var closestParkingPlace, navigateSwitcher = false;
+
+
 /*
 
 /!*
